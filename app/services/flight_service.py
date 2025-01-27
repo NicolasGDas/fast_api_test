@@ -108,20 +108,17 @@ def find_valid_journeys(events, origin, destination, date):
     schema = FlightSchema()
     events = [schema.load(e) for e in events if e['departure_datetime'] >= date]
     journeys = []
-    flights_of_journey = []
     for first_leg in events:
-        print(first_leg)
         if first_leg['departure_city'] == origin:
             if first_leg['arrival_city'] == destination:
                 # Viaje directo
                 journeys.append([first_leg])
             else:
-                # Buscar conexiones
+                # Buscar conexiones. Aca puedo poner el filtro de 2 por el momento, pero prefiero dejarlo esscalado. Este metodo me hace ruido y capaz hay mejores fomas de implementarlo mas que un anidado
                 for second_leg in events:
                     if (first_leg['arrival_city'] == second_leg['departure_city'] and 
                         second_leg['arrival_city'] == destination
                         and within_limits(first_leg, second_leg)):
-                        print("Hola")
                         journeys.append([first_leg, second_leg])
 
     return journeys
